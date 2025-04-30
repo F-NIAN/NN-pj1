@@ -39,8 +39,8 @@ train_labs = train_labs[10000:]
 train_imgs = train_imgs / train_imgs.max()
 valid_imgs = valid_imgs / valid_imgs.max()
 
-linear_model = nn.models.Model_MLP([train_imgs.shape[-1], 800, 600, 10], 'ReLU', [1e-4, 1e-4, 1e-4])
-optimizer = nn.optimizer.SGD(init_lr=0.06, model=linear_model)
+linear_model = nn.models.Model_MLP([train_imgs.shape[-1], 600, 10], 'ReLU', [1e-4, 1e-4])
+optimizer = nn.optimizer.MomentGD(init_lr=0.06, model=linear_model, mu=0.9)
 scheduler = nn.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=[800, 2400, 4000], gamma=0.99)
 loss_fn = nn.op.MultiCrossEntropyLoss(model=linear_model, max_classes=train_labs.max()+1)
 
