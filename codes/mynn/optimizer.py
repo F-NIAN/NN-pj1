@@ -22,9 +22,13 @@ class SGD(Optimizer):
              if layer.optimizable == True:
                 for key in layer.params.keys():
                     if layer.weight_decay:
-                        grad_with_decay = layer.grads[key] + layer.weight_decay_lambda * layer.params[key]
+                        grad_with_decay = layer.grads[key] + layer.weight_decay_lambda * layer.params[key] 
+                        #l2 reg使用下面
+                        #grad_with_decay = layer.layer.grads[key] + layer.weight_decay_lambda * layer.params[key]
                     else:
                         grad_with_decay = layer.grads[key]
+                        #l2 reg使用下面
+                        #grad_with_decay = layer.layer.grads[key]
                     layer.params[key] -= self.init_lr * grad_with_decay
 
 

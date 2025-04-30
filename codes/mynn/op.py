@@ -235,7 +235,44 @@ class L2Regularization(Layer):
     """
     L2 Reg can act as weight decay that can be implemented in class Linear.
     """
-    pass
+    def __init__(self, layer, reg_coeff=0.01):
+        super().__init__()
+        self.layer = layer        
+        self.reg_coeff = reg_coeff  
+        self.l2_loss = 0.0          
+        self.params = {'W': layer.W, 'b': layer.b}
+        self.weight_decay = layer.weight_decay
+        self.weight_decay_lambda = layer.weight_decay_lambda
+
+    def __call__(self, X) -> np.ndarray:
+        return self.forward(X)
+
+    def forward(self, X):
+        output = self.layer(X)
+        self.l2_loss = 0.0
+        
+        for param in self.layer.params.values():
+            self.l2_loss += np.sum(param ** 2) 
+            
+        self.l2_loss = 0.5 * self.reg_coeff * self.l2_loss  
+            
+        return output
+
+    def backward(self, grad):
+        reg_grads = {}
+        for name, param in self.layer.params.items():
+            reg_grads[name] = self.reg_coeff * param  
+
+        for name in self.layer.grads.keys():
+            if self.layer.grads[name] is not None:
+                self.layer.grads[name] += reg_grads[name]
+            else:
+                self.layer.grads[name] = reg_grads[name]
+                
+        return self.layer.backward(grad)
+    
+    def clear_grad(self):
+        self.layer.clear_grad()
        
 def softmax(X):
     x_max = np.max(X, axis=1, keepdims=True)

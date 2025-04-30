@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pickle
 
 model = nn.models.Model_MLP()
-model.load_model(r'C:\Users\lenovo\Desktop\神经网络与深度学习\PJ1\codes\best_models\mlp2_2.pickle')
+model.load_model(r'C:\Users\lenovo\Desktop\神经网络与深度学习\PJ1\codes\best_models\mlp2_3.pickle')
 
 test_images_path = r'c:\Users\lenovo\Desktop\神经网络与深度学习\PJ1\codes\dataset\MNIST\t10k-images-idx3-ubyte.gz'
 test_labels_path = r'c:\Users\lenovo\Desktop\神经网络与深度学习\PJ1\codes\dataset\MNIST\t10k-labels-idx1-ubyte.gz'

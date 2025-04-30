@@ -5,7 +5,7 @@ class Model_MLP(Layer):
     """
     A model with linear layers. We provied you with this example about a structure of a model.
     """
-    def __init__(self, size_list=None, act_func=None, lambda_list=None):
+    def __init__(self, size_list=None, act_func=None, lambda_list=None, reg_method=None):
         self.size_list = size_list
         self.act_func = act_func
 
@@ -14,13 +14,22 @@ class Model_MLP(Layer):
             for i in range(len(size_list) - 1):
                 layer = Linear(in_dim=size_list[i], out_dim=size_list[i + 1])
                 if lambda_list is not None:
-                    layer.weight_decay = True
-                    layer.weight_decay_lambda = lambda_list[i]
+                    if reg_method is not None and reg_method== 'L2_Reg':
+                        layer.weight_decay = True
+                        l2_layer = L2Regularization(layer, reg_coeff=lambda_list[i]) 
+                        self.layers.append(l2_layer)
+                    else:
+                        layer.weight_decay = True
+                        layer.weight_decay_lambda = lambda_list[i]
+                        self.layers.append(layer)
+                else:
+                    self.layers.append(layer)
+
                 if act_func == 'Logistic':
                     raise NotImplementedError
                 elif act_func == 'ReLU':
                     layer_f = ReLU()
-                self.layers.append(layer)
+
                 if i < len(size_list) - 2:
                     self.layers.append(layer_f)
 
